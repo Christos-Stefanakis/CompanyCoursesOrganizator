@@ -57,36 +57,42 @@ public class Company {
         this.companiesList = companiesList;
     }
 
-    public void addCompany(String name, String address){
-        String companyName="";
-        if (checkCompanyValidName(name)){companyName = name;}
+    public void addCompany(String name, String address) {
+        String companyName = "";
+        if (checkCompanyValidName(name)) {
+            companyName = name;
+            this.companiesList.add(
+                    new Company(autoIdEditor(), name, address)
+            );
+        }
 
     }
-     public boolean checkCompanyValidName(String name){
-        if(this.companiesList.stream().noneMatch(c->c.name.equals(name))){
+
+    public boolean checkCompanyValidName(String name) {
+        if (this.companiesList.stream().noneMatch(c -> c.name.equals(name))) {
             return true;
-        }else return false;
-     }
+        } else return false;
+    }
 
-     public int idMaxValue(){
+    public int idMaxValue() {
         return this.companiesList.stream()
-                .map(e->e.id)
+                .map(e -> e.id)
                 .max(Integer::compare).get();
-     }
+    }
 
-     public int autoIdEditor() {
-         if (!this.companiesList.isEmpty()) {
-             for (int i = 1; i <= idMaxValue(); i++) {
-                 int finalI = i;
-                 if (this.companiesList.stream().noneMatch(e -> e.id == finalI)) {
-                     return finalI;
-                 }
-                 if (finalI == idMaxValue()) {
-                     return finalI + 1;
-                 }
-             }
-         }return 1;
-     }
+
+    public int autoIdEditor(){
+        if(this.companiesList.isEmpty()){
+            return 1;
+        }else{
+            for (int i = 1; i <= idMaxValue(); i++) {
+                int finalI = i;
+                if(this.companiesList.stream().noneMatch(e->e.id == finalI)){
+                    return finalI;
+                }
+            }
+        }return idMaxValue() + 1;
+    }
 
     @Override
     public String toString() {
@@ -97,3 +103,4 @@ public class Company {
                 '}';
     }
 }
+
