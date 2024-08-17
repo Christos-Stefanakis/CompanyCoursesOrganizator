@@ -1,4 +1,4 @@
-package cz.sda.java.advcoding.ex01;
+package org.example;
 
 public class Produkt {
     private String name;

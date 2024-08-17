@@ -1,4 +1,4 @@
-package cz.sda.java.advcoding.ex01;
+package org.example;
 
 public class Manufacturer {
     private String name;
