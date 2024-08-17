@@ -1,0 +1,16 @@
+Vytvořte program, který umožní přidávat, firmy, osoby, výrobce a produkty
+Přejmenovat výrobce, vypsat všechny produkty prodaného výrobce
+Přejmenovat firmu, vypsat všechny zaměstnance firmy
+Přidat typy školení a termíny školení - přidávat, editace
+Práce s účastníky školení - přihlásit účastníka, potvrdit účast, potvrdit úspěšné absolvování školení
+Vypsat všechny firmy, které mohou nakupovat výrobky daného výrobce
+Vypsat všechny firmy, které mohou nakupovat daný výrobek
+Vypsat všechny výrobce, které daná firma může nakupovat
+Přesun zaměstanance mezi firmami
+Přidat délku trvání vyškolení (tj. školení může dávat možnost nakupovat jen po určitý počet měsíců - typicky 12 nebo 24)
+
+Pro vytvoření textového menu aplikace můžete použít tuto knihovnu: https://github.com/beryx/text-io
+beryx/text-io
+A library for creating interactive console applications in Java
+Website
+http://text-io.beryx.org/
