@@ -15,7 +15,7 @@ public class Company {
     public Company() {
     }
 
-    public Company(String name, String address) {
+    public Company(int id, String name, String address) {
         this.name = name;
         this.id = id;
         this.address = address;
@@ -70,10 +70,30 @@ public class Company {
 
      public int idMaxValue(){
         return this.companiesList.stream()
-                .max(Comparator.comparingInt(a -> a.id)).map(id->id.id).get();
+                .map(e->e.id)
+                .max(Integer::compare).get();
      }
 
-     public int autoIdEditor(){
-        return 0;
+     public int autoIdEditor() {
+         if (!this.companiesList.isEmpty()) {
+             for (int i = 1; i <= idMaxValue(); i++) {
+                 int finalI = i;
+                 if (this.companiesList.stream().noneMatch(e -> e.id == finalI)) {
+                     return finalI;
+                 }
+                 if (finalI == idMaxValue()) {
+                     return finalI + 1;
+                 }
+             }
+         }return 1;
      }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }
