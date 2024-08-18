@@ -1,6 +1,6 @@
 package org.example;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.example.model.Company;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

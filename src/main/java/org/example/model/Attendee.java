@@ -1,4 +1,6 @@
 package org.example.model;
 
-public record Attendee(boolean attended, boolean succeeded) {
+public class Attendee {
+    private boolean succeeded;
+    private boolean attended;
 }
