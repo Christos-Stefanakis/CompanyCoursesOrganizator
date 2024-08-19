@@ -1,105 +1,41 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.example.service.CompanyService;
+import org.example.service.PersonService;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class Company {
+@Getter @Setter
+public class Company extends CompanyService {
 
-    private String name;
     private int id;
+    private String name;
     private String address;
-    private List<Company> companiesList = new ArrayList<>();
+    private List <Person> employeesList;
 
     public Company() {
+
     }
 
     public Company(int id, String name, String address) {
         this.name = name;
         this.id = id;
         this.address = address;
+        this.employeesList = getEmployeesList() == null? new ArrayList<>() : getEmployeesList();
     }
 
-    public Company(List<Company> companiesList) {
-        this.companiesList = companiesList;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public List<Company> getCompaniesList() {
-        return companiesList;
-    }
-
-    public void setCompaniesList(List<Company> companiesList) {
-        this.companiesList = companiesList;
-    }
-
-    public void addCompany(String name, String address) {
-        String companyName = "";
-        if (checkCompanyValidName(name)) {
-            companyName = name;
-            this.companiesList.add(
-                    new Company(autoIdEditor(), name, address)
-            );
-        }
-
-    }
-
-    public boolean checkCompanyValidName(String name) {
-        if (this.companiesList.stream().noneMatch(c -> c.name.equals(name))) {
-            return true;
-        } else return false;
-    }
-
-
-    public int idMaxValue() {
-        return this.companiesList.stream()
-                .map(e -> e.id)
-                .max(Integer::compare).get();
-    }
-
-
-    public int autoIdEditor(){
-        if(this.companiesList.isEmpty()){
-            return 1;
-        }else{
-            for (int i = 1; i <= idMaxValue(); i++) {
-                int finalI = i;
-                if(this.companiesList.stream().noneMatch(e->e.id == finalI)){
-                    return finalI;
-                }
-            }
-        }return idMaxValue() + 1;
-    }
 
     @Override
     public String toString() {
         return "Company{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
+                ", employeesList=" + employeesList.size() +
                 '}';
     }
 }
-

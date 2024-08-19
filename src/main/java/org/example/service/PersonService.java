@@ -1,20 +1,18 @@
 package org.example.service;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.example.model.Person;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Getter
+@Getter @Setter
 public class PersonService implements IdMaxValue,AutoIdEditor{
     private List<Person> personList = new ArrayList<>();
-
-    public void setPersonList(List<Person> personList) {
-        this.personList = personList;
-    }
 
     public void addPerson(String name, String phoneNumber, String emailAddress){
         phoneNumber = phoneNumber.replace(" ", "").replace("-", "");
@@ -26,7 +24,7 @@ public class PersonService implements IdMaxValue,AutoIdEditor{
                 && emailValidator(emailAddress)
         )
         {
-            this.personList.add(new Person(name, phoneNumber, emailAddress));
+            this.personList.add(new Person(autoIdEditor(),name, phoneNumber, emailAddress));
         }
     }
 
@@ -94,4 +92,23 @@ public class PersonService implements IdMaxValue,AutoIdEditor{
             }
         }return idMaxValue() + 1;
     }
+
+    public int personsListSize(){
+        return Optional.ofNullable(personList)
+                .map(List::size)
+                .orElse(0);
+    }
+
+    public <T> List<Person> findPerson(T text){
+        List<Person> persons = new ArrayList<>();
+        if (text instanceof Number){
+            persons.addAll(this.personList.stream().filter(p->p.getId() == ((Number) text).intValue()).toList());
+        }
+        if(text instanceof String){
+            persons.addAll(this.personList.stream().filter(p-> p.getPhoneNumber().equalsIgnoreCase(((String) text))).toList());
+            persons.addAll(this.personList.stream().filter(p->p.getName().toLowerCase().contains(((String) text).toLowerCase())).toList());
+            persons.addAll(this.personList.stream().filter(p->p.getEmailAddress().toLowerCase().contains(((String) text).toLowerCase())).toList());
+        }return persons;
+    }
+
 }
