@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Getter @Setter
-public class Company extends CompanyService {
+public class Company {
 
     private int id;
     private String name;
@@ -25,7 +25,11 @@ public class Company extends CompanyService {
         this.name = name;
         this.id = id;
         this.address = address;
-        this.employeesList = getEmployeesList() == null? new ArrayList<>() : getEmployeesList();
+        if(this.employeesList==null){
+            this.employeesList = new ArrayList<>();
+        }else{
+
+        }
     }
 
 

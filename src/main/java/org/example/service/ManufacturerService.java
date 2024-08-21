@@ -3,6 +3,7 @@ package org.example.service;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.model.Manufacturer;
+import org.example.model.Person;
 import org.example.model.Product;
 
 import java.util.ArrayList;
@@ -14,6 +15,13 @@ public class ManufacturerService implements IdMaxValue, AutoIdEditor {
 
     public void addManufacturer(String name, String address, String requiresTraining){
         this.manufacturerList.add(new Manufacturer(autoIdEditor(),name, address, requiresTraining));
+    }
+
+    public <T> void updateManufacturer(T text, String name, String address, String requiresTraining){
+        Manufacturer updateManufacturer = findManufacturer(text).stream().findFirst().get();
+        updateManufacturer.setName(name);
+        updateManufacturer.setAddress(address);
+        updateManufacturer.setRequiresTraining(requiresTraining);
     }
 
     @Override
@@ -48,5 +56,9 @@ public class ManufacturerService implements IdMaxValue, AutoIdEditor {
             manufacturers.addAll(this.manufacturerList.stream().filter(p -> p.getRequiresTraining().toLowerCase().contains (((String) text).toLowerCase())).toList());
         }
         return manufacturers;
+    }
+
+    public List<Product> manufacturerProducts(ProductService productService, Manufacturer manufacturer){
+        return productService.getProductList().stream().filter(p->p.getManufacturer() == manufacturer).toList();
     }
 }

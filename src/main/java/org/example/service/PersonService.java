@@ -2,6 +2,7 @@ package org.example.service;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.model.Company;
 import org.example.model.Person;
 
 import java.util.ArrayList;
@@ -12,7 +13,9 @@ import java.util.regex.Pattern;
 
 @Getter @Setter
 public class PersonService implements IdMaxValue,AutoIdEditor{
+
     private List<Person> personList = new ArrayList<>();
+
 
     public void addPerson(String name, String phoneNumber, String emailAddress){
         phoneNumber = phoneNumber.replace(" ", "").replace("-", "");
@@ -26,6 +29,13 @@ public class PersonService implements IdMaxValue,AutoIdEditor{
         {
             this.personList.add(new Person(autoIdEditor(),name, phoneNumber, emailAddress));
         }
+    }
+
+    public <T> void updatePeron(int id, String name, String phoneNumber, String emailAddress){
+        Person updatePeron = selectPersonById(id);
+        updatePeron.setName(name);
+        updatePeron.setPhoneNumber(phoneNumber);
+        updatePeron.setEmailAddress(emailAddress);
     }
 
     public boolean nameValid(String name){
@@ -78,7 +88,6 @@ public class PersonService implements IdMaxValue,AutoIdEditor{
                 .max(Integer::compareTo).get();
     }
 
-
     @Override
     public int autoIdEditor() {
         if(this.personList.isEmpty()){
@@ -102,13 +111,47 @@ public class PersonService implements IdMaxValue,AutoIdEditor{
     public <T> List<Person> findPerson(T text){
         List<Person> persons = new ArrayList<>();
         if (text instanceof Number){
-            persons.addAll(this.personList.stream().filter(p->p.getId() == ((Number) text).intValue()).toList());
+            persons.add(selectPersonById(((Number) text).intValue()));
         }
         if(text instanceof String){
-            persons.addAll(this.personList.stream().filter(p-> p.getPhoneNumber().equalsIgnoreCase(((String) text))).toList());
-            persons.addAll(this.personList.stream().filter(p->p.getName().toLowerCase().contains(((String) text).toLowerCase())).toList());
-            persons.addAll(this.personList.stream().filter(p->p.getEmailAddress().toLowerCase().contains(((String) text).toLowerCase())).toList());
+            persons.addAll(findCompaniesByName((String) text));
+            persons.addAll(findPersonsByPhoneNumber((String) text));
+            persons.addAll(findPersonsByEmailAddress((String) text));
         }return persons;
     }
+
+    public Person selectPersonById(int id){
+        return this.personList
+                .stream()
+                .filter(c->c.getId() == id)
+                .findFirst()
+                .get();
+    }
+
+    public List<Person> findCompaniesByName(String text){
+        return this.personList
+                .stream()
+                .filter(c-> c.getName()
+                        .toLowerCase()
+                        .contains(text
+                                .toLowerCase())).toList();
+    }
+
+    public List<Person> findPersonsByPhoneNumber(String text){
+        return this.personList
+                .stream()
+                .filter(c-> c.getPhoneNumber()
+                        .toLowerCase()
+                        .contains(text.toLowerCase())).toList();
+    }
+
+    public List<Person> findPersonsByEmailAddress(String text){
+        return this.personList
+                .stream()
+                .filter(c-> c.getEmailAddress()
+                        .toLowerCase()
+                        .contains(text.toLowerCase())).toList();
+    }
+
 
 }

@@ -13,19 +13,24 @@ import java.util.List;
 public class CompanyService implements IdMaxValue, AutoIdEditor{
 
     private List<Company> companiesList = new ArrayList<>();
-    private List<Company> companies = getCompaniesList();
-    private List<Person> persons = getPersons();
 
+    private PersonService personService;
+    private Company company;
+    private Person person;
 
     public void addCompany(String name, String address) {
-        String companyName = "";
         if (checkCompanyValidName(name)) {
-            companyName = name;
             this.companiesList.add(
                     new Company(autoIdEditor(), name, address)
             );
         }
 
+    }
+
+    public <T> void updateCompany(T text, String name, String address){
+        Company updateCompany = findCompany(text).stream().findFirst().get();
+        updateCompany.setName(name);
+        updateCompany.setAddress(address);
     }
 
     public boolean checkCompanyValidName(String name) {
@@ -55,21 +60,50 @@ public class CompanyService implements IdMaxValue, AutoIdEditor{
         }return idMaxValue() + 1;
     }
 
-    public void employPerson(PersonService personService, Company company, int id){
-        List<Person> persons = personService.getPersonList();
-        persons.stream().filter(p->p.getId() == id).findAny().get().setEmployers(company);
-        company.getEmployeesList().add(personService.getPersonList().stream().filter(p->p.getId() == id).findAny().get());
+    public void employPerson(Company company, Person person){
+        company.getEmployeesList().add(person);
+        person.setEmployers(company);
     }
 
     public <T> List<Company> findCompany(T text){
         List<Company> companies = new ArrayList<>();
         if(text instanceof Number){
-            companies.addAll(this.companiesList.stream().filter(c->c.getId() == ((Number)text).intValue()).toList());
+            companies.add(selectCompanyById(((Number)text).intValue()));
         }
         if(text instanceof String){
-            companies.addAll(this.companiesList.stream().filter(c-> c.getName().toLowerCase().toLowerCase().contains(((String) text).toLowerCase())).toList());
-            companies.addAll(this.companiesList.stream().filter(c-> c.getAddress().toLowerCase().contains(((String) text).toLowerCase())).toList());
+            companies.addAll(findCompaniesByName((String) text));
+            companies.addAll(findCompaniesByAddress((String) text));
         }
         return  companies;
+    }
+
+
+    public Company selectCompanyById(int id){
+        return companiesList
+                .stream()
+                .filter(c->c.getId() == id)
+                .findFirst()
+                .get();
+    }
+
+    public List<Company> findCompaniesByName(String text){
+        return this.companiesList
+                .stream()
+                .filter(c-> c.getName()
+                        .toLowerCase()
+                        .contains(text
+                                .toLowerCase())).toList();
+    }
+
+    public List<Company> findCompaniesByAddress(String text){
+        return this.companiesList
+                .stream()
+                .filter(c-> c.getAddress()
+                        .toLowerCase()
+                        .contains(text.toLowerCase())).toList();
+    }
+
+    public List <Person> companyEmployees(Company company){
+        return company.getEmployeesList();
     }
 }

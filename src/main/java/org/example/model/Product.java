@@ -13,11 +13,11 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id, String name, double price) {
+    public Product(int id, String name, double price, Manufacturer manufacturer) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.manufacturer = manufacturer == null? new Manufacturer() : manufacturer;
+        this.manufacturer = manufacturer;
     }
 
 
@@ -27,6 +27,7 @@ public class Product {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
+                ", manufacturer=" + manufacturer +
                 '}';
     }
 }

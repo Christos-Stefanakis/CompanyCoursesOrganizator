@@ -115,4 +115,20 @@ class PersonServiceTest {
         assertEquals(evaChuda, personService.findPerson("e.chuda@gmail.com").stream().findAny().get());
         assertEquals(kubaOndri, personService.findPerson("Kuba Ondri").stream().findAny().get());
     }
+
+    @Test
+    void updatePeron() {
+        personService.addPerson("Petr Novak", "+420 000 000 001", "p.novak@ip.gr");
+        personService.addPerson("Jana Petrova", "+420 000 000 002", "j.petrova@outlook.gr");
+        personService.addPerson("Eva Chuda", "+420 000 000 003", "e.chuda@gmail.com");
+        personService.addPerson("Kuba Ondri", "+420 000 000 004", "k.ondri@seznam.gr");
+        personService.addPerson("Pepa Pepanek", "+420 000 000 005", "p.pepanek@in.gr");
+        personService.addPerson("Iva Koka", "+420 000 000 006", "i.koka@google.gr");
+        Person evaChuda = personService.getPersonList().stream().filter(p->p.getName().equals("Eva Chuda")).findAny().get();
+        personService.updatePeron(3,"Eva Chudakova", "+420356486123","eva.chudakova@gmail.com");
+        assertEquals("Eva Chudakova", evaChuda.getName());
+        assertEquals("+420356486123", evaChuda.getPhoneNumber());
+        assertEquals("eva.chudakova@gmail.com", evaChuda.getEmailAddress());
+
+    }
 }
