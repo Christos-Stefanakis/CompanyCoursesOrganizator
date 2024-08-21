@@ -1,8 +1,11 @@
 package org.example.model;
 
 import lombok.Getter;
+import lombok.Setter;
 
-@Getter
+import java.util.List;
+
+@Getter @Setter
 public class Manufacturer {
     private int id;
     private String name;
