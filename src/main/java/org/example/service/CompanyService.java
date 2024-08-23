@@ -2,6 +2,7 @@ package org.example.service;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.model.Address;
 import org.example.model.Company;
 import org.example.model.Person;
 
@@ -18,19 +19,18 @@ public class CompanyService implements IdMaxValue, AutoIdEditor{
     private Company company;
     private Person person;
 
-    public void addCompany(String name, String address) {
+    public void addCompany(String name, String country, String cityName, String stateAbbreviation, String streetName, String zipCode, int buildNumber) {
         if (checkCompanyValidName(name)) {
             this.companiesList.add(
-                    new Company(autoIdEditor(), name, address)
+                    new Company(autoIdEditor(), name, new Address(country, cityName, stateAbbreviation, streetName, zipCode, buildNumber))
             );
         }
-
     }
 
-    public <T> void updateCompany(T text, String name, String address){
-        Company updateCompany = findCompany(text).stream().findFirst().get();
-        updateCompany.setName(name);
-        updateCompany.setAddress(address);
+    public <T> void updateCompany(int id, String name, String country, String cityName, String stateAbbreviation, String streetName, String zipCode, int buildNumber){
+        Company selectedCompany = selectCompanyById(id);
+        selectedCompany.setName(name);
+        selectedCompany.setAddress(new Address(country, cityName, stateAbbreviation, streetName, zipCode, buildNumber));
     }
 
     public boolean checkCompanyValidName(String name) {
@@ -73,6 +73,7 @@ public class CompanyService implements IdMaxValue, AutoIdEditor{
         if(text instanceof String){
             companies.addAll(findCompaniesByName((String) text));
             companies.addAll(findCompaniesByAddress((String) text));
+            companies.addAll(findCompaniesByAddress((String) text));
         }
         return  companies;
     }
@@ -96,14 +97,71 @@ public class CompanyService implements IdMaxValue, AutoIdEditor{
     }
 
     public List<Company> findCompaniesByAddress(String text){
+        List<Company> companies = new ArrayList<>();
+            companies.addAll(findCompaniesByCountry(text));
+            companies.addAll(findCompaniesByCityName(text));
+            companies.addAll(findCompaniesByStreetName(text));
+            companies.addAll(findCompaniesByStateAbbreviation(text));
+            companies.addAll(findCompaniesByBuildNumber(Integer.parseInt(text)));
+            companies.addAll(findCompaniesByZipCode(text));
+        return companies;
+    }
+
+    public List<Company> findCompaniesByCountry(String country){
         return this.companiesList
                 .stream()
-                .filter(c-> c.getAddress()
-                        .toLowerCase()
-                        .contains(text.toLowerCase())).toList();
+                .filter(c->c.getAddress().getCountry().toLowerCase().contains(country.toLowerCase()))
+                .toList();
+    }
+
+    public List<Company> findCompaniesByCityName(String cityName){
+        return this.companiesList
+                .stream()
+                .filter(c->c.getAddress().getCityName().toLowerCase().contains(cityName.toLowerCase()))
+                .toList();
+    }
+
+    public List<Company> findCompaniesByStreetName(String streetName){
+        return this.companiesList
+                .stream()
+                .filter(c->c.getAddress().getStreetName().toLowerCase().contains(streetName.toLowerCase()))
+                .toList();
+    }
+
+    public List<Company> findCompaniesByStateAbbreviation(String stateAbbreviation){
+        return this.companiesList
+                .stream()
+                .filter(c->c.getAddress().getStateAbbreviation().toLowerCase().contains(stateAbbreviation.toLowerCase()))
+                .toList();
+    }
+
+    public List<Company> findCompaniesByBuildNumber(int buildNumber){
+        return this.companiesList
+                .stream()
+                .filter(c->c.getAddress().getBuildNumber() == buildNumber)
+                .toList();
+    }
+
+    public List<Company> findCompaniesByZipCode(String zipCode){
+        return this.companiesList
+                .stream()
+                .filter(c->c.getAddress()
+                        .getZipCode()
+                        .replaceAll(" ", "")
+                        .contains(zipCode.replaceAll(" ","")))
+                .toList();
     }
 
     public List <Person> companyEmployees(Company company){
         return company.getEmployeesList();
+    }
+
+    public void removeCompany(int id){
+       this.companiesList = this.companiesList.stream()
+               .filter(c->c != selectCompanyById(id))
+               .toList();
+       for(Person person: personService.personsWithSpecificEmployee(id)){
+           person.setEmployers(new Company());
+       }
     }
 }
