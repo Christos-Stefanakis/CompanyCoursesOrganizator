@@ -2,9 +2,7 @@ package org.example.service;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.model.Product;
-import org.example.model.Training;
-import org.example.model.TrainingType;
+import org.example.model.*;
 
 import java.util.*;
 public class TrainingService implements  IdMaxValue, AutoIdEditor{
@@ -12,6 +10,7 @@ public class TrainingService implements  IdMaxValue, AutoIdEditor{
     @Getter private final List<Training> trainingSchedule = new ArrayList<>();
 
     private TrainingType trainingType;
+    private Attendee attendee;
 
     public void addTrainingTime(TrainingType trainingType, Date dateAndTime, String location) {
         trainingSchedule.add(new Training(autoIdEditor(), dateAndTime, location, trainingType));
@@ -82,5 +81,9 @@ public class TrainingService implements  IdMaxValue, AutoIdEditor{
             scheduleTime.addAll(findTrainingScheduleByDate((Date) text));
         }
         return scheduleTime;
+    }
+
+    public void singInPerson(Person person){
+        attendee.getAttended().add(person);
     }
 }
