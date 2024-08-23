@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.service.PersonService;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter @Setter
 public class Person extends PersonService{
@@ -26,17 +24,12 @@ public class Person extends PersonService{
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
-        this.employers = employers == null? new Company(0, "Úřad práce", "Ústí nad Labem") : employers;
+        this.employers = employers == null? new Company(0, "Úřad práce", new Address("Czechia", "Prague", "Prague 7", "Holešovice", "170 00", 25)) : employers;
     }
 
     @Override
     public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", emailAddress='" + emailAddress + '\'' +
-                ", employers=" + employers +
-                '}';
+        return String.format("[%s] %s, Phone: %s, email: %s, employer: %s"
+                , this.id, this.name, this.phoneNumber, this.emailAddress, this.employers);
     }
 }
