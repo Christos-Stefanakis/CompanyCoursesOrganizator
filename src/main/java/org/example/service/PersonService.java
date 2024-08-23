@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class PersonService implements IdMaxValue,AutoIdEditor{
 
     private List<Person> personList = new ArrayList<>();
-
+    CompanyService companyService;
 
     public void addPerson(String name, String phoneNumber, String emailAddress){
         phoneNumber = phoneNumber.replace(" ", "").replace("-", "");
@@ -153,5 +153,10 @@ public class PersonService implements IdMaxValue,AutoIdEditor{
                         .contains(text.toLowerCase())).toList();
     }
 
-
+    public List<Person> personsWithSpecificEmployee(int id){
+        return personList
+                .stream()
+                .filter(p->p.getEmployers() ==  companyService.selectCompanyById(id))
+                .toList();
+    }
 }
