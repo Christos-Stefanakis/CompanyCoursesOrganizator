@@ -1,11 +1,8 @@
 package org.example.model;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.example.service.PersonService;
 
 
-@Getter @Setter
 public class Person extends PersonService{
     private int id;
     private String name;
@@ -16,7 +13,10 @@ public class Person extends PersonService{
     PersonService personService;
 
     public Person() {
-
+        this.id = 0;
+        this.name = "Administrator";
+        this.phoneNumber = "";
+        this.emailAddress = "";
     }
 
     public Person(int id,String name, String phoneNumber, String emailAddress) {
@@ -24,7 +24,55 @@ public class Person extends PersonService{
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
-        this.employers = employers == null? new Company(0, "Úřad práce", new Address("Czechia", "Prague", "Prague 7", "Holešovice", "170 00", 25)) : employers;
+        this.employers = employers == null? new Company() : employers;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public Company getEmployers() {
+        return employers;
+    }
+
+    public void setEmployers(Company employers) {
+        this.employers = employers;
+    }
+
+    public PersonService getPersonService() {
+        return personService;
+    }
+
+    public void setPersonService(PersonService personService) {
+        this.personService = personService;
     }
 
     @Override

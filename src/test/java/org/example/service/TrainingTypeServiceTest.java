@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TrainingTypeServiceTest {
+
     TrainingTypeService trainingTypeService = new TrainingTypeService();
     TrainingService trainingService =new TrainingService();
 

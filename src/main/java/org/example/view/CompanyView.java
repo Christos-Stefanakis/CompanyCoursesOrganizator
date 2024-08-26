@@ -8,13 +8,12 @@ import org.beryx.textio.TextIO;
 
 public class CompanyView implements ApplicationMenu {
 
-    private TextIO textIO;
-    private Company company;
-    private CompanyService companyService;
+    private final TextIO textIO;
+    private final CompanyService companyService;
 
-    public CompanyView(TextIO textIO, Company company) {
+    public CompanyView(TextIO textIO, CompanyService companyService) {
         this.textIO = textIO;
-        this.company = company;
+        this.companyService = companyService;
     }
 
     @Override
@@ -101,7 +100,7 @@ public class CompanyView implements ApplicationMenu {
         String searchText = textIO.newStringInputReader().read("Search company: ");
         companyService.findCompany(searchText);
         int companyId = textIO.newIntInputReader().read("Enter company ID: ");
-        companyService.removeCompany(companyId);
+        companyService.removeCompany(companyService.selectCompanyById(companyId));
     }
 
     public void listAllCompanies(){

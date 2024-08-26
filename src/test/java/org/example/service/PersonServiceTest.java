@@ -3,6 +3,8 @@ package org.example.service;
 import org.example.model.Person;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersonServiceTest {
@@ -95,7 +97,7 @@ class PersonServiceTest {
     @Test
     void testPersonStuff(){
         personService.addPerson("Jana Novakova", "+420 000 000 000", "jana@in.gr");
-        assertEquals("Úřad práce", personService.getPersonList().stream().map(p->p.getEmployers().getName()).toList().get(0));
+        assertEquals(null, personService.getPersonList().stream().map(p->p.getEmployers().getName()).toList().get(0));
     }
 
     @Test
@@ -130,5 +132,26 @@ class PersonServiceTest {
         assertEquals("+420356486123", evaChuda.getPhoneNumber());
         assertEquals("eva.chudakova@gmail.com", evaChuda.getEmailAddress());
 
+    }
+
+    @Test
+    void findPersonsByName() {
+
+        personService.addPerson("Petr Novak", "+420 000 000 001", "p.novak@ip.gr");
+        personService.addPerson("Jana Petrova", "+420 000 000 002", "j.petrova@outlook.gr");
+        personService.addPerson("Eva Chuda", "+420 000 000 003", "e.chuda@gmail.com");
+        personService.addPerson("Kuba Ondri", "+420 000 000 004", "k.ondri@seznam.gr");
+        personService.addPerson("Pepa Pepanek", "+420 000 000 005", "p.pepanek@in.gr");
+        personService.addPerson("Iva Koka", "+420 000 000 006", "i.koka@google.gr");
+
+
+    }
+
+    @Test
+    void findPersonsByPhoneNumber() {
+    }
+
+    @Test
+    void findPersonsByEmailAddress() {
     }
 }

@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductServiceTest {
+
     ProductService productService = new ProductService();
+
     @Test
     void addProduct() {
         Manufacturer sda = new Manufacturer(1, "SDA", "Praha", "Java");

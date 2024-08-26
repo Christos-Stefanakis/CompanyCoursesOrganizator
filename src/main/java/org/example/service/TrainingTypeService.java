@@ -1,7 +1,6 @@
 package org.example.service;
 
-import lombok.Getter;
-import lombok.Setter;
+
 import org.example.model.Manufacturer;
 import org.example.model.Person;
 import org.example.model.Product;
@@ -10,11 +9,17 @@ import org.example.model.TrainingType;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter
 public class TrainingTypeService implements  IdMaxValue, AutoIdEditor{
 
     List <TrainingType> trainingTypeList =new ArrayList<>();
 
+    public List<TrainingType> getTrainingTypeList() {
+        return trainingTypeList;
+    }
+
+    public void setTrainingTypeList(List<TrainingType> trainingTypeList) {
+        this.trainingTypeList = trainingTypeList;
+    }
 
     public void addTrainingType(String name, String company, String description){
         this.trainingTypeList.add(new TrainingType(autoIdEditor(), name, company, description));
@@ -76,5 +81,6 @@ public class TrainingTypeService implements  IdMaxValue, AutoIdEditor{
     public List<TrainingType> findTrainingTypeByName(String text){
         return this.trainingTypeList.stream().filter(t->t.getName().toLowerCase().contains(text.toLowerCase())).toList();
     }
+
 
 }

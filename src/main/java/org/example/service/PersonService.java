@@ -17,6 +17,14 @@ public class PersonService implements IdMaxValue,AutoIdEditor{
     private List<Person> personList = new ArrayList<>();
     CompanyService companyService;
 
+    public List<Person> getPersonList() {
+        return personList;
+    }
+
+    public void setPersonList(List<Person> personList) {
+        this.personList = personList;
+    }
+
     public void addPerson(String name, String phoneNumber, String emailAddress){
         phoneNumber = phoneNumber.replace(" ", "").replace("-", "");
         if (!checkDuplicateName(name)
@@ -24,11 +32,13 @@ public class PersonService implements IdMaxValue,AutoIdEditor{
 //                && !checkDuplicatePhone(phoneNumber)
                 && phoneValid(phoneNumber)
                 && !checkDuplicateEmail(emailAddress)
-                && emailValidator(emailAddress)
-        )
-        {
-            this.personList.add(new Person(autoIdEditor(),name, phoneNumber, emailAddress));
-        }
+                && emailValidator(emailAddress))
+            this.personList.add(
+                    new Person(
+                            autoIdEditor()
+                            ,name
+                            ,phoneNumber
+                            ,emailAddress));
     }
 
     public <T> void updatePeron(int id, String name, String phoneNumber, String emailAddress){
@@ -114,7 +124,7 @@ public class PersonService implements IdMaxValue,AutoIdEditor{
             persons.add(selectPersonById(((Number) text).intValue()));
         }
         if(text instanceof String){
-            persons.addAll(findCompaniesByName((String) text));
+            persons.addAll(findPersonsByName((String) text));
             persons.addAll(findPersonsByPhoneNumber((String) text));
             persons.addAll(findPersonsByEmailAddress((String) text));
         }return persons;
@@ -128,7 +138,7 @@ public class PersonService implements IdMaxValue,AutoIdEditor{
                 .get();
     }
 
-    public List<Person> findCompaniesByName(String text){
+    public List<Person> findPersonsByName(String text){
         return this.personList
                 .stream()
                 .filter(c-> c.getName()
@@ -153,10 +163,31 @@ public class PersonService implements IdMaxValue,AutoIdEditor{
                         .contains(text.toLowerCase())).toList();
     }
 
-    public List<Person> personsWithSpecificEmployee(int id){
-        return personList
+    public List<Person> personsWithSpecificEmployee(Company company){
+        List<Person> specificPerson = personList
                 .stream()
-                .filter(p->p.getEmployers() ==  companyService.selectCompanyById(id))
+                .filter(p->p.getEmployers() ==  company)
                 .toList();
+        if(specificPerson.isEmpty()){
+            return new ArrayList<>();
+        }return specificPerson;
     }
+
+    public void removePerson(int id){
+        this.personList = this.personList
+                .stream()
+                .filter(p->p != selectPersonById(id))
+                .toList();
+        for(Company company: companyService.findCompanyByEmployee(selectPersonById(id))){
+            company.setEmployeesList(company.getEmployeesList().stream().filter(p->p != selectPersonById(id)).toList());
+        }
+    }
+
+    public void removeCompanyFromPerson(Company company){
+        List<Person> personsWithSpecificEmployer = this.personList.stream().filter(p->p.getEmployers() == company).toList();
+        for(Person person: personsWithSpecificEmployer){
+            person.setEmployers(new Company());
+        }
+    }
+
 }

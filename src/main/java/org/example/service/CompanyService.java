@@ -1,23 +1,38 @@
 package org.example.service;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.example.model.Address;
 import org.example.model.Company;
 import org.example.model.Person;
+import org.example.model.Training;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-@Setter
-@Getter
 public class CompanyService implements IdMaxValue, AutoIdEditor{
 
-    private List<Company> companiesList = new ArrayList<>();
+    private List <Company> companiesList = new ArrayList<>();
+
+    public CompanyService() {
+    }
+
+    public CompanyService(List<Company> companiesList) {
+        this.companiesList = companiesList;
+    }
+
+    public List<Company> getCompaniesList() {
+        return companiesList;
+    }
+
+    public void setCompaniesList(List<Company> companiesList) {
+        this.companiesList = companiesList;
+    }
 
     private PersonService personService;
     private Company company;
     private Person person;
+    private TrainingService trainingService;
+
 
     public void addCompany(String name, String country, String cityName, String stateAbbreviation, String streetName, String zipCode, int buildNumber) {
         if (checkCompanyValidName(name)) {
@@ -73,7 +88,6 @@ public class CompanyService implements IdMaxValue, AutoIdEditor{
         if(text instanceof String){
             companies.addAll(findCompaniesByName((String) text));
             companies.addAll(findCompaniesByAddress((String) text));
-            companies.addAll(findCompaniesByAddress((String) text));
         }
         return  companies;
     }
@@ -96,14 +110,18 @@ public class CompanyService implements IdMaxValue, AutoIdEditor{
                                 .toLowerCase())).toList();
     }
 
-    public List<Company> findCompaniesByAddress(String text){
+    public <T> List<Company> findCompaniesByAddress(T text){
         List<Company> companies = new ArrayList<>();
-            companies.addAll(findCompaniesByCountry(text));
-            companies.addAll(findCompaniesByCityName(text));
-            companies.addAll(findCompaniesByStreetName(text));
-            companies.addAll(findCompaniesByStateAbbreviation(text));
-            companies.addAll(findCompaniesByBuildNumber(Integer.parseInt(text)));
-            companies.addAll(findCompaniesByZipCode(text));
+        if(text instanceof String) {
+            companies.addAll(findCompaniesByCountry((String) text));
+            companies.addAll(findCompaniesByCityName((String) text));
+            companies.addAll(findCompaniesByStreetName((String) text));
+            companies.addAll(findCompaniesByStateAbbreviation((String) text));
+            companies.addAll(findCompaniesByZipCode((String) text));
+        }
+        if(text instanceof Number) {
+            companies.addAll(findCompaniesByBuildNumber(((Number) text).intValue()));
+        }
         return companies;
     }
 
@@ -135,10 +153,10 @@ public class CompanyService implements IdMaxValue, AutoIdEditor{
                 .toList();
     }
 
-    public List<Company> findCompaniesByBuildNumber(int buildNumber){
+    public List<Company> findCompaniesByBuildNumber(int text){
         return this.companiesList
                 .stream()
-                .filter(c->c.getAddress().getBuildNumber() == buildNumber)
+                .filter(c->c.getAddress().getBuildNumber() == text)
                 .toList();
     }
 
@@ -156,12 +174,23 @@ public class CompanyService implements IdMaxValue, AutoIdEditor{
         return company.getEmployeesList();
     }
 
-    public void removeCompany(int id){
+    public void removeCompany(Company company){
        this.companiesList = this.companiesList.stream()
-               .filter(c->c != selectCompanyById(id))
+               .filter(c->c != company)
                .toList();
-       for(Person person: personService.personsWithSpecificEmployee(id)){
-           person.setEmployers(new Company());
-       }
+    }
+
+    public List <Company> findCompanyByEmployee(Person person){
+        return this.companiesList.stream().filter(c->c.getEmployeesList() == person).toList();
+    }
+
+    public void signUpPerson(Training training, Person person){
+        if (this.trainingService.getSignUpPersons().containsKey(training.getId())){
+            this.trainingService.getSignUpPersons().get(training.getId()).add(person);
+        }else{
+            List<Person> signPersons = new ArrayList<>();
+            signPersons.add(person);
+            this.trainingService.getSignUpPersons().put(training.getId(), signPersons);
+        }
     }
 }

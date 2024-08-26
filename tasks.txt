@@ -2,7 +2,7 @@ Vytvořte program, který umožní *přidávat, *firmy, *osoby, *výrobce a *pro
 Přejmenovat *výrobce, *vypsat všechny produkty prodaného výrobce
 Přejmenovat *firmu, *vypsat všechny zaměstnance firmy
 Přidat *typy školení a *termíny školení - *přidávat, *editace
-Práce s účastníky školení - přihlásit účastníka, potvrdit účast, potvrdit úspěšné absolvování školení
+Práce s účastníky školení - *přihlásit účastníka, potvrdit účast, potvrdit úspěšné absolvování školení
 Vypsat všechny firmy, které mohou nakupovat výrobky daného výrobce
 Vypsat všechny firmy, které mohou nakupovat daný výrobek
 Vypsat všechny výrobce, které daná firma může nakupovat

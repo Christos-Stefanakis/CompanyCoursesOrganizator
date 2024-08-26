@@ -1,17 +1,21 @@
 package org.example.service;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.example.model.Manufacturer;
-import org.example.model.Person;
 import org.example.model.Product;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter
 public class ManufacturerService implements IdMaxValue, AutoIdEditor {
+
     private List<Manufacturer> manufacturerList = new ArrayList<>();
+
+    public List<Manufacturer> getManufacturerList() {
+        return manufacturerList;
+    }
+
+    public void setManufacturerList(List<Manufacturer> manufacturerList) {
+        this.manufacturerList = manufacturerList;
+    }
 
     public void addManufacturer(String name, String address, String requiresTraining){
         this.manufacturerList.add(new Manufacturer(autoIdEditor(),name, address, requiresTraining));

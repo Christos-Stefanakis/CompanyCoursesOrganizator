@@ -9,8 +9,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ManufacturerServiceTest {
+
     ManufacturerService manufacturerService = new ManufacturerService();
     ProductService productService = new ProductService();
+
     @Test
     void addManufacturer() {
         manufacturerService.addManufacturer("Coursera","onLine", "");
